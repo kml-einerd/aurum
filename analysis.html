@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurum - Análise de Ativo</title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="analysis-page">
+    <header class="analysis-header">
+        <div class="container header-content">
+            <a href="index.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Voltar ao Mercado
+            </a>
+            <div class="search-box">
+                <input type="text" id="symbolInput" placeholder="Símbolo (ex: PETR4)" autocomplete="off">
+                <button id="searchBtn">Analisar</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Dynamic Widgets Container -->
+        <div id="widgets-wrapper" class="widgets-container">
+            <!-- Widgets will be injected here based on widgets.json -->
+        </div>
+    </main>
+
+    <div id="notification-container"></div>
+
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/analysis.js" defer></script>
+</body>
+
+</html>

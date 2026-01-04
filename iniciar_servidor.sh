@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "════════════════════════════════════════════════════════════"
-echo "  🚀 INICIANDO SERVIDOR HTTP - APP AB"
+echo "  🚀 AURUM - SERVIDOR APP"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 
@@ -26,12 +26,9 @@ echo "════════════════════════�
 echo ""
 echo "  ✅ SERVIDOR RODANDO!"
 echo ""
-echo "  📊 Acesse as páginas:"
+echo "  📊 Acesse a página principal:"
 echo ""
-echo "  → Dashboard:    http://localhost:8001/pages/index.html"
-echo "  → Grade:        http://localhost:8001/pages/home.html"
-echo "  → Teste:        http://localhost:8001/pages/test_widget.html"
-echo "  → Carteiras:    http://localhost:8001/pages/carteiras.html"
+echo "  → Home: http://localhost:8001/index.html"
 echo ""
 echo "════════════════════════════════════════════════════════════"
 echo ""

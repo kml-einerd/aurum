@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurum - Mercado B3</title>
+    <meta name="description" content="Dashboard profissional para acompanhamento de ativos da B3">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="home-page">
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">✨ Aurum</h1>
+            <p class="tagline">Inteligência Financeira B3</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Market Overview Widget -->
+            <section class="widget-section" id="market-overview-section">
+                <div id="market-overview-container" class="tradingview-widget-container">
+                    <!-- Widget will be injected here -->
+                </div>
+            </section>
+
+            <!-- Stock Cards Grid -->
+            <section class="stocks-section">
+                <h2 class="section-title">Análise Detalhada</h2>
+                <div id="stock-grid" class="stock-cards-grid">
+                    <!-- Cards will be injected dynamically -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/home.js" defer></script>
+</body>
+</html>

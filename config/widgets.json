@@ -1,0 +1,102 @@
+[
+  {
+    "id": "symbol-info",
+    "title": "Informações do Ativo",
+    "type": "tradingview",
+    "scriptUrl": "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js",
+    "fullWidth": true,
+    "config": {
+      "width": "100%",
+      "locale": "br",
+      "colorTheme": "dark",
+      "isTransparent": true
+    }
+  },
+  {
+    "id": "symbol-overview",
+    "title": "Gráfico Interativo",
+    "type": "tradingview",
+    "scriptUrl": "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js",
+    "fullWidth": true,
+    "config": {
+      "chartOnly": false,
+      "width": "100%",
+      "height": 500,
+      "locale": "br",
+      "colorTheme": "dark",
+      "autosize": true,
+      "showVolume": false,
+      "showMA": false,
+      "hideDateRanges": false,
+      "hideMarketStatus": false,
+      "hideSymbolLogo": false,
+      "scalePosition": "right",
+      "scaleMode": "Normal",
+      "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+      "fontSize": "10",
+      "noTimeScale": false,
+      "valuesTracking": "1",
+      "changeMode": "price-and-percent",
+      "chartType": "area",
+      "isTransparent": true,
+      "backgroundColor": "rgba(0, 0, 0, 0)"
+    }
+  },
+  {
+    "id": "technical-analysis",
+    "title": "Análise Técnica",
+    "type": "tradingview",
+    "scriptUrl": "https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js",
+    "fullWidth": false,
+    "config": {
+      "interval": "1D",
+      "width": "100%",
+      "isTransparent": true,
+      "height": 450,
+      "showIntervalTabs": true,
+      "displayMode": "single",
+      "locale": "br",
+      "colorTheme": "dark"
+    }
+  },
+  {
+    "id": "timeline",
+    "title": "Notícias em Tempo Real",
+    "type": "news",
+    "fullWidth": false,
+    "config": {
+      "source": "google-news",
+      "count": 5
+    }
+  },
+  {
+    "id": "company-profile",
+    "title": "Perfil da Empresa",
+    "type": "tradingview",
+    "scriptUrl": "https://s3.tradingview.com/external-embedding/embed-widget-symbol-profile.js",
+    "fullWidth": true,
+    "config": {
+      "width": "100%",
+      "height": 400,
+      "isTransparent": true,
+      "colorTheme": "dark",
+      "locale": "br"
+    }
+  },
+  {
+    "id": "fundamental-data",
+    "title": "Dados Fundamentais",
+    "type": "tradingview",
+    "scriptUrl": "https://s3.tradingview.com/external-embedding/embed-widget-financials.js",
+    "fullWidth": true,
+    "config": {
+      "isTransparent": true,
+      "largeChartUrl": "",
+      "displayMode": "regular",
+      "width": "100%",
+      "height": 800,
+      "colorTheme": "dark",
+      "locale": "br"
+    }
+  }
+]
