@@ -1,7 +1,8 @@
 // Home Page Logic
 document.addEventListener('DOMContentLoaded', async () => {
-    const stocks = await Core.fetchJSON('config/stocks.json');
-    if (!stocks) return;
+    const text = await Core.fetchText('config/stocks.txt');
+    const stocks = Core.parseConfig(text);
+    if (!stocks || stocks.length === 0) return;
 
     renderMarketOverview(stocks);
     renderStockGrid(stocks);
@@ -32,31 +33,34 @@ function renderMarketOverview(stocks) {
 
 function renderStockGrid(stocks) {
     const grid = document.getElementById('stock-grid');
-    grid.innerHTML = stocks.map(stock => `
-        <div class="stock-card" onclick="navigateToAnalysis('${stock.ticker}')">
-            <div class="stock-card-header">
-                <div class="stock-info">
-                    <div class="stock-ticker">${stock.ticker}</div>
-                    <div class="stock-name">${stock.name}</div>
-                </div>
-            </div>
-            <div class="stock-price">R$ ${stock.price.toFixed(2)}</div>
-            <span class="stock-change ${stock.change >= 0 ? 'positive' : 'negative'}">
-                ${stock.change >= 0 ? '▲' : '▼'} ${Math.abs(stock.change)}%
-            </span>
-            <div class="stock-meta">
-                <div class="stock-meta-item">
-                    <div class="meta-label">Volume</div>
-                    <div class="meta-value">${stock.volume}</div>
-                </div>
-                <div class="stock-meta-item">
-                    <div class="meta-label">Market Cap</div>
-                    <div class="meta-value">${stock.marketCap}</div>
-                </div>
-            </div>
-            <span class="stock-sector">${stock.sector}</span>
-        </div>
-    `).join('');
+    grid.innerHTML = '';
+
+    stocks.forEach(stock => {
+        const card = document.createElement('div');
+        card.className = 'stock-card-widget';
+
+        // TradingView Mini Chart Widget
+        const script = document.createElement('script');
+        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+        script.async = true;
+        script.innerHTML = JSON.stringify({
+            "symbol": `BMFBOVESPA:${stock.ticker}`,
+            "width": "100%",
+            "height": 220,
+            "locale": "br",
+            "dateRange": "12M",
+            "colorTheme": "dark",
+            "trendLineColor": "rgba(59, 130, 246, 1)",
+            "underLineColor": "rgba(59, 130, 246, 0.3)",
+            "underLineBottomColor": "rgba(59, 130, 246, 0)",
+            "isTransparent": true,
+            "autosize": false,
+            "largeChartUrl": "http://localhost:8001/analysis.html"
+        });
+
+        card.appendChild(script);
+        grid.appendChild(card);
+    });
 }
 
 function navigateToAnalysis(ticker) {

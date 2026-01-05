@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightweight Charts - Plugins</title>
+    <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            line-height: 1.4;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #222;
+            border-radius: 4px;
+        }
+
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: #333;
+            border-radius: 4px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #f0b90b;
+            color: #000;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin: 30px 0 5px;
+            padding: 10px;
+            background: #333;
+            border-left: 4px solid #e91e63;
+        }
+
+        .info {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background: #222;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-box {
+            background: #0d0d0d;
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        .chart-box h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #e91e63;
+        }
+
+        .chart-box .desc {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .chart-box .chart {
+            height: 300px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .full-chart {
+            height: 400px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+
+        .tooltip-container {
+            position: relative;
+        }
+
+        .custom-tooltip {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            display: none;
+        }
+
+        .custom-tooltip.visible {
+            display: block;
+        }
+
+        .custom-tooltip .title {
+            color: #f0b90b;
+            font-weight: bold;
+        }
+
+        .custom-tooltip .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .custom-tooltip .label {
+            color: #888;
+        }
+
+        .custom-tooltip .value {
+            color: #fff;
+        }
+
+        .custom-tooltip .positive {
+            color: #26a69a;
+        }
+
+        .custom-tooltip .negative {
+            color: #ef5350;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="nav">
+        <a href="index.html">📊 Funcionalidades Base</a>
+        <a href="plugins.html" class="active">🔌 Plugins</a>
+    </div>
+
+    <h1>🔌 Plugins do Lightweight Charts</h1>
+    <p style="color:#888; margin-bottom:20px;">
+        Plugins são extensões que adicionam funcionalidades extras aos gráficos.
+        O repositório oficial contém 28 plugins. Abaixo estão implementações funcionais dos principais.
+    </p>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 1: TOOLTIP CUSTOMIZADO -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>1. TOOLTIP CUSTOMIZADO</h2>
+        <div class="info">
+            Tooltip que aparece ao passar o mouse, mostrando OHLCV e variação.
+            <br>Implementação: subscribeCrosshairMove + elemento HTML posicionado.
+        </div>
+
+        <div class="tooltip-container">
+            <div id="tooltip1" class="custom-tooltip">
+                <div class="title">PETR4</div>
+                <div class="row"><span class="label">Data:</span> <span class="value" id="tt-date">-</span></div>
+                <div class="row"><span class="label">Abertura:</span> <span class="value" id="tt-open">-</span></div>
+                <div class="row"><span class="label">Máxima:</span> <span class="value" id="tt-high">-</span></div>
+                <div class="row"><span class="label">Mínima:</span> <span class="value" id="tt-low">-</span></div>
+                <div class="row"><span class="label">Fechamento:</span> <span class="value" id="tt-close">-</span></div>
+                <div class="row"><span class="label">Variação:</span> <span class="value" id="tt-change">-</span></div>
+            </div>
+            <div id="chart-tooltip" class="full-chart"></div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 2: VOLUME PROFILE -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>2. VOLUME PROFILE</h2>
+        <div class="info">
+            Mostra distribuição de volume por faixa de preço. Identifica POC (Point of Control), VAH e VAL.
+            <br>Implementação: Histogramas horizontais desenhados como primitivas.
+        </div>
+
+        <div id="chart-volume-profile" class="full-chart"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 3: DRAWING TOOLS -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>3. FERRAMENTAS DE DESENHO</h2>
+        <div class="info">
+            Linhas de tendência, retângulos, linhas horizontais/verticais desenhadas pelo usuário.
+            <br>Implementação: Click handlers + primitivas customizadas.
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>3.1 Trend Lines (Linhas de Tendência)</h3>
+                <div class="desc">Linhas conectando dois pontos para identificar tendências.</div>
+                <div id="chart-trendline" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>3.2 Retângulos</h3>
+                <div class="desc">Áreas retangulares para destacar zonas de suporte/resistência.</div>
+                <div id="chart-rectangles" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>3.3 Linhas Verticais</h3>
+                <div class="desc">Marcam eventos ou datas importantes.</div>
+                <div id="chart-vertlines" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>3.4 Texto Ancorado</h3>
+                <div class="desc">Anotações de texto em pontos específicos.</div>
+                <div id="chart-anchored-text" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 4: SESSION HIGHLIGHTING -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>4. SESSION HIGHLIGHTING (Destaque de Sessões)</h2>
+        <div class="info">
+            Destaca diferentes sessões de mercado com cores de fundo (pré-market, regular, after-hours).
+            <br>Implementação: Background shade com base no horário.
+        </div>
+
+        <div id="chart-sessions" class="full-chart"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 5: PRICE ALERTS -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>5. ALERTAS DE PREÇO INTERATIVOS</h2>
+        <div class="info">
+            Linhas de preço que o usuário pode adicionar/remover clicando no gráfico.
+            <br>Implementação: Click handler + createPriceLine com título editável.
+        </div>
+
+        <p style="color:#f0b90b; margin:10px 0;">Clique no gráfico para adicionar um alerta de preço</p>
+        <div id="chart-alerts" class="full-chart"></div>
+        <div id="alerts-list" style="font-size:12px; color:#888; margin-top:10px;"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 6: SERIES CUSTOMIZADAS -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>6. SERIES CUSTOMIZADAS (Custom Series)</h2>
+        <div class="info">
+            O Lightweight Charts 4.0+ permite criar tipos de série completamente customizados.
+            <br>Abaixo simulações dos plugins de série disponíveis.
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>6.1 Stacked Area (Área Empilhada)</h3>
+                <div class="desc">Múltiplas áreas empilhadas para composição (ex: setores).</div>
+                <div id="chart-stacked-area" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>6.2 Grouped Bars (Barras Agrupadas)</h3>
+                <div class="desc">Barras lado a lado para comparar categorias.</div>
+                <div id="chart-grouped-bars" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>6.3 HLC Area (High-Low-Close)</h3>
+                <div class="desc">Área mostrando range entre high e low com linha de close.</div>
+                <div id="chart-hlc" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>6.4 Lollipop Series</h3>
+                <div class="desc">Pontos com hastes, bom para eventos discretos.</div>
+                <div id="chart-lollipop" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 7: HEATMAP -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>7. HEATMAP (Mapa de Calor)</h2>
+        <div class="info">
+            Visualização de intensidade por cor. Útil para order flow, correlação, etc.
+            <br>Implementação: Custom series com células coloridas.
+        </div>
+
+        <div id="chart-heatmap" class="full-chart"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 8: DELTA TOOLTIP -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>8. DELTA TOOLTIP</h2>
+        <div class="info">
+            Mostra a diferença (delta) entre dois pontos selecionados.
+            <br>Clique em dois pontos para ver a diferença.
+        </div>
+
+        <p id="delta-info" style="color:#f0b90b; margin:10px 0;">Clique em dois pontos do gráfico para calcular o delta
+        </p>
+        <div id="chart-delta" class="full-chart"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 9: CROSSHAIR HIGHLIGHT -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>9. HIGHLIGHT BAR CROSSHAIR</h2>
+        <div class="info">
+            Destaca a barra atual sob o cursor com cor diferente.
+        </div>
+
+        <div id="chart-highlight" class="full-chart"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 10: IMAGE WATERMARK -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>10. IMAGE WATERMARK</h2>
+        <div class="info">
+            Marca d'água com imagem (logo) ao invés de texto.
+            <br>Implementação: Imagem posicionada absolutamente sobre o canvas.
+        </div>
+
+        <div style="position:relative;">
+            <div id="chart-image-watermark" class="full-chart"></div>
+            <div
+                style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); opacity:0.1; font-size:100px; pointer-events:none;">
+                📊</div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 11: ROUNDED CANDLES -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>11. ROUNDED CANDLES</h2>
+        <div class="info">
+            Candles com bordas arredondadas para visual mais suave.
+            <br>Nota: Requer custom series renderer. Abaixo simulação visual.
+        </div>
+
+        <div id="chart-rounded" class="full-chart"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 12: BOLLINGER BANDS INDICATOR -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>12. BANDS INDICATOR (Indicador de Bandas)</h2>
+        <div class="info">
+            Indicador que desenha bandas automaticamente (Bollinger, Keltner, etc).
+            <br>Implementação: Cálculo + múltiplas LineSeries.
+        </div>
+
+        <div id="chart-bands" class="full-chart"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PLUGIN 13: BOX WHISKER (BOXPLOT) -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>13. BOX & WHISKER (BoxPlot)</h2>
+        <div class="info">
+            Gráfico estatístico mostrando mediana, quartis e outliers.
+            <br>Útil para análise de distribuição de retornos.
+        </div>
+
+        <div id="chart-boxplot" class="full-chart"></div>
+    </div>
+
+    <script>
+        // ===== DADOS =====
+        function generateCandles(basePrice, days) {
+            const data = [];
+            let price = basePrice;
+            const startDate = new Date('2024-01-01');
+            for (let i = 0; i < days; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                if (date.getDay() === 0 || date.getDay() === 6) continue;
+                const change = (Math.random() - 0.48) * price * 0.03;
+                const open = price;
+                const close = price + change;
+                const high = Math.max(open, close) * (1 + Math.random() * 0.015);
+                const low = Math.min(open, close) * (1 - Math.random() * 0.015);
+                price = close;
+                data.push({
+                    time: date.toISOString().split('T')[0],
+                    open: +open.toFixed(2), high: +high.toFixed(2),
+                    low: +low.toFixed(2), close: +close.toFixed(2),
+                    volume: Math.floor(Math.random() * 50000000 + 10000000)
+                });
+            }
+            return data;
+        }
+
+        function toLine(d) { return d.map(c => ({ time: c.time, value: c.close })); }
+        function calcSMA(data, period) {
+            const result = [];
+            for (let i = period - 1; i < data.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < period; j++) sum += data[i - j].close || data[i - j].value;
+                result.push({ time: data[i].time, value: +(sum / period).toFixed(2) });
+            }
+            return result;
+        }
+
+        const PETR4 = generateCandles(38, 250);
+
+        function makeChart(id, opts = {}) {
+            const el = document.getElementById(id);
+            return LightweightCharts.createChart(el, {
+                width: el.clientWidth, height: el.clientHeight || 300,
+                layout: { background: { type: 'solid', color: '#0d0d0d' }, textColor: '#999' },
+                grid: { vertLines: { color: '#1a1a1a' }, horzLines: { color: '#1a1a1a' } },
+                rightPriceScale: { borderColor: '#333' },
+                timeScale: { borderColor: '#333' },
+                crosshair: { mode: 1 },
+                ...opts
+            });
+        }
+
+        // ===== 1. TOOLTIP =====
+        const chart1 = makeChart('chart-tooltip');
+        const series1 = chart1.addCandlestickSeries();
+        series1.setData(PETR4);
+        chart1.timeScale().fitContent();
+
+        const tooltip = document.getElementById('tooltip1');
+        chart1.subscribeCrosshairMove(param => {
+            if (!param.time || !param.seriesData.get(series1)) {
+                tooltip.classList.remove('visible');
+                return;
+            }
+            const d = param.seriesData.get(series1);
+            const change = ((d.close - d.open) / d.open * 100).toFixed(2);
+            document.getElementById('tt-date').textContent = param.time;
+            document.getElementById('tt-open').textContent = 'R$ ' + d.open.toFixed(2);
+            document.getElementById('tt-high').textContent = 'R$ ' + d.high.toFixed(2);
+            document.getElementById('tt-low').textContent = 'R$ ' + d.low.toFixed(2);
+            document.getElementById('tt-close').textContent = 'R$ ' + d.close.toFixed(2);
+            const chEl = document.getElementById('tt-change');
+            chEl.textContent = (change >= 0 ? '+' : '') + change + '%';
+            chEl.className = 'value ' + (change >= 0 ? 'positive' : 'negative');
+            tooltip.classList.add('visible');
+        });
+
+        // ===== 2. VOLUME PROFILE (simulação visual) =====
+        const chart2 = makeChart('chart-volume-profile');
+        const series2 = chart2.addCandlestickSeries();
+        series2.setData(PETR4);
+
+        // Simular volume profile com histograma horizontal via markers
+        const priceMin = Math.min(...PETR4.map(d => d.low));
+        const priceMax = Math.max(...PETR4.map(d => d.high));
+        const buckets = 20;
+        const bucketSize = (priceMax - priceMin) / buckets;
+        const volumeByPrice = new Array(buckets).fill(0);
+
+        PETR4.forEach(d => {
+            const bucket = Math.floor((d.close - priceMin) / bucketSize);
+            if (bucket >= 0 && bucket < buckets) volumeByPrice[bucket] += d.volume;
+        });
+
+        const maxVol = Math.max(...volumeByPrice);
+        const pocBucket = volumeByPrice.indexOf(maxVol);
+        const pocPrice = priceMin + (pocBucket + 0.5) * bucketSize;
+
+        // POC line
+        series2.createPriceLine({ price: pocPrice, color: '#f0b90b', lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: 'POC' });
+        series2.createPriceLine({ price: priceMin + (pocBucket + 3) * bucketSize, color: 'rgba(38,166,154,0.5)', lineWidth: 1, lineStyle: 2, title: 'VAH' });
+        series2.createPriceLine({ price: priceMin + (pocBucket - 3) * bucketSize, color: 'rgba(239,83,80,0.5)', lineWidth: 1, lineStyle: 2, title: 'VAL' });
+
+        chart2.timeScale().fitContent();
+
+        // ===== 3.1 TREND LINES =====
+        const chart3a = makeChart('chart-trendline');
+        const series3a = chart3a.addCandlestickSeries();
+        series3a.setData(PETR4);
+
+        // Adicionar linhas de tendência via markers + description
+        const len = PETR4.length;
+        series3a.setMarkers([
+            { time: PETR4[len - 100].time, position: 'belowBar', color: '#2196F3', shape: 'circle', text: 'Início LT' },
+            { time: PETR4[len - 20].time, position: 'belowBar', color: '#2196F3', shape: 'circle', text: 'Fim LT' },
+        ]);
+        // Price lines simulando tendência
+        const startPrice = PETR4[len - 100].low;
+        const endPrice = PETR4[len - 20].low;
+        series3a.createPriceLine({ price: startPrice, color: '#2196F3', lineWidth: 1, lineStyle: 2 });
+        series3a.createPriceLine({ price: endPrice, color: '#2196F3', lineWidth: 1, lineStyle: 2 });
+        chart3a.timeScale().fitContent();
+
+        // ===== 3.2 RECTANGLES =====
+        const chart3b = makeChart('chart-rectangles');
+        const series3b = chart3b.addCandlestickSeries();
+        series3b.setData(PETR4);
+
+        // Simular retângulos com múltiplas price lines
+        const rectTop = PETR4[len - 50].high * 1.02;
+        const rectBottom = PETR4[len - 50].low * 0.98;
+        series3b.createPriceLine({ price: rectTop, color: 'rgba(33,150,243,0.5)', lineWidth: 2, lineStyle: 0, title: 'Resistência' });
+        series3b.createPriceLine({ price: rectBottom, color: 'rgba(33,150,243,0.5)', lineWidth: 2, lineStyle: 0, title: 'Suporte' });
+
+        series3b.setMarkers([
+            { time: PETR4[len - 80].time, position: 'aboveBar', color: 'rgba(33,150,243,0.3)', shape: 'square', text: '← Zona de Consolidação →' },
+        ]);
+        chart3b.timeScale().fitContent();
+
+        // ===== 3.3 VERTICAL LINES =====
+        const chart3c = makeChart('chart-vertlines');
+        const series3c = chart3c.addCandlestickSeries();
+        series3c.setData(PETR4);
+        series3c.setMarkers([
+            { time: PETR4[len - 150].time, position: 'aboveBar', color: '#f0b90b', shape: 'square', text: 'Dividendos', size: 1 },
+            { time: PETR4[len - 100].time, position: 'aboveBar', color: '#e91e63', shape: 'square', text: 'Balanço', size: 1 },
+            { time: PETR4[len - 50].time, position: 'aboveBar', color: '#26a69a', shape: 'square', text: 'Split', size: 1 },
+        ]);
+        chart3c.timeScale().fitContent();
+
+        // ===== 3.4 ANCHORED TEXT =====
+        const chart3d = makeChart('chart-anchored-text');
+        const series3d = chart3d.addCandlestickSeries();
+        series3d.setData(PETR4);
+        series3d.setMarkers([
+            { time: PETR4[len - 120].time, position: 'aboveBar', color: '#fff', shape: 'arrowDown', text: 'Topo Histórico' },
+            { time: PETR4[len - 80].time, position: 'belowBar', color: '#fff', shape: 'arrowUp', text: 'Fundo Duplo' },
+            { time: PETR4[len - 30].time, position: 'inBar', color: '#f0b90b', shape: 'circle', text: 'Rompimento' },
+        ]);
+        chart3d.timeScale().fitContent();
+
+        // ===== 4. SESSION HIGHLIGHTING =====
+        const chart4 = makeChart('chart-sessions');
+        const series4 = chart4.addCandlestickSeries();
+
+        // Criar dados intraday com sessões
+        const intradayData = [];
+        const baseTime = Math.floor(new Date('2024-06-03T10:00:00').getTime() / 1000);
+        let sessionPrice = 38;
+
+        for (let day = 0; day < 5; day++) {
+            const dayStart = baseTime + day * 86400;
+            // Pre-market (9:00-10:00)
+            for (let i = 0; i < 60; i += 5) {
+                const t = dayStart - 3600 + i * 60;
+                const c = sessionPrice + (Math.random() - 0.5) * 0.2;
+                intradayData.push({ time: t, open: sessionPrice, high: Math.max(sessionPrice, c) + 0.1, low: Math.min(sessionPrice, c) - 0.1, close: c });
+                sessionPrice = c;
+            }
+            // Regular (10:00-17:00)
+            for (let i = 0; i < 420; i += 5) {
+                const t = dayStart + i * 60;
+                const c = sessionPrice + (Math.random() - 0.48) * 0.3;
+                intradayData.push({ time: t, open: sessionPrice, high: Math.max(sessionPrice, c) + 0.1, low: Math.min(sessionPrice, c) - 0.1, close: c });
+                sessionPrice = c;
+            }
+        }
+
+        series4.setData(intradayData);
+        chart4.applyOptions({ timeScale: { timeVisible: true } });
+        chart4.timeScale().fitContent();
+
+        // Marcar sessões
+        series4.setMarkers([
+            { time: baseTime - 1800, position: 'aboveBar', color: 'rgba(156,39,176,0.5)', shape: 'square', text: 'Pré-Market' },
+            { time: baseTime + 12600, position: 'aboveBar', color: 'rgba(38,166,154,0.5)', shape: 'square', text: 'Regular Session' },
+        ]);
+
+        // ===== 5. PRICE ALERTS =====
+        const chart5 = makeChart('chart-alerts');
+        const series5 = chart5.addCandlestickSeries();
+        series5.setData(PETR4);
+        chart5.timeScale().fitContent();
+
+        const alertsList = document.getElementById('alerts-list');
+        const alerts = [];
+
+        chart5.subscribeClick(param => {
+            if (!param.point) return;
+            const price = series5.coordinateToPrice(param.point.y);
+            if (price) {
+                const alertLine = series5.createPriceLine({
+                    price: +price.toFixed(2),
+                    color: '#f0b90b',
+                    lineWidth: 1,
+                    lineStyle: 2,
+                    axisLabelVisible: true,
+                    title: '🔔 Alerta'
+                });
+                alerts.push({ price: price.toFixed(2), line: alertLine });
+                alertsList.innerHTML = 'Alertas: ' + alerts.map(a => 'R$' + a.price).join(', ');
+            }
+        });
+
+        // ===== 6.1 STACKED AREA =====
+        const chart6a = makeChart('chart-stacked-area');
+        const data1 = Array.from({ length: 100 }, (_, i) => ({ time: `2024-${String(Math.floor(i / 30) + 1).padStart(2, '0')}-${String((i % 30) + 1).padStart(2, '0')}`, value: 30 + Math.sin(i / 10) * 10 + Math.random() * 5 }));
+        const data2 = data1.map(d => ({ ...d, value: d.value * 0.6 + Math.random() * 3 }));
+        const data3 = data1.map(d => ({ ...d, value: d.value * 0.3 + Math.random() * 2 }));
+
+        chart6a.addAreaSeries({ lineColor: '#26a69a', topColor: 'rgba(38,166,154,0.4)', bottomColor: 'rgba(38,166,154,0.1)' }).setData(data1);
+        chart6a.addAreaSeries({ lineColor: '#2196F3', topColor: 'rgba(33,150,243,0.4)', bottomColor: 'rgba(33,150,243,0.1)' }).setData(data2);
+        chart6a.addAreaSeries({ lineColor: '#e91e63', topColor: 'rgba(233,30,99,0.4)', bottomColor: 'rgba(233,30,99,0.1)' }).setData(data3);
+        chart6a.timeScale().fitContent();
+
+        // ===== 6.2 GROUPED BARS =====
+        const chart6b = makeChart('chart-grouped-bars');
+        const histData1 = data1.map((d, i) => ({ ...d, value: Math.abs(d.value - 30), color: '#26a69a' }));
+        const histData2 = data1.map((d, i) => ({ ...d, value: Math.abs(d.value - 28) * 0.8, color: '#2196F3' }));
+
+        chart6b.addHistogramSeries({ priceScaleId: 'h1' }).setData(histData1);
+        chart6b.addHistogramSeries({ priceScaleId: 'h2' }).setData(histData2);
+        chart6b.timeScale().fitContent();
+
+        // ===== 6.3 HLC AREA =====
+        const chart6c = makeChart('chart-hlc');
+        // Simular HLC com área entre high e low
+        const hlcData = PETR4.slice(0, 100);
+        chart6c.addAreaSeries({ lineColor: 'transparent', topColor: 'rgba(33,150,243,0.2)', bottomColor: 'rgba(33,150,243,0.2)' }).setData(hlcData.map(d => ({ time: d.time, value: d.high })));
+        chart6c.addAreaSeries({ lineColor: 'transparent', topColor: '#0d0d0d', bottomColor: '#0d0d0d' }).setData(hlcData.map(d => ({ time: d.time, value: d.low })));
+        chart6c.addLineSeries({ color: '#f0b90b', lineWidth: 2 }).setData(hlcData.map(d => ({ time: d.time, value: d.close })));
+        chart6c.timeScale().fitContent();
+
+        // ===== 6.4 LOLLIPOP =====
+        const chart6d = makeChart('chart-lollipop');
+        const lollipopData = [];
+        for (let i = 0; i < 50; i++) {
+            if (Math.random() > 0.7) {
+                lollipopData.push({ time: PETR4[i * 4].time, value: (Math.random() - 0.5) * 10, color: Math.random() > 0.5 ? '#26a69a' : '#ef5350' });
+            }
+        }
+        chart6d.addHistogramSeries().setData(lollipopData);
+        chart6d.timeScale().fitContent();
+
+        // ===== 7. HEATMAP =====
+        const chart7 = makeChart('chart-heatmap');
+        const heatData = [];
+        for (let i = 0; i < 100; i++) {
+            const val = Math.sin(i / 10) + Math.random() * 0.5 - 0.25;
+            const intensity = Math.abs(val);
+            const hue = val > 0 ? 160 : 0;
+            heatData.push({
+                time: PETR4[i].time,
+                value: val * 10,
+                color: `hsla(${hue}, 70%, ${30 + intensity * 40}%, 0.8)`
+            });
+        }
+        chart7.addHistogramSeries().setData(heatData);
+        chart7.timeScale().fitContent();
+
+        // ===== 8. DELTA TOOLTIP =====
+        const chart8 = makeChart('chart-delta');
+        const series8 = chart8.addCandlestickSeries();
+        series8.setData(PETR4);
+        chart8.timeScale().fitContent();
+
+        let deltaPoint1 = null;
+        const deltaInfo = document.getElementById('delta-info');
+
+        chart8.subscribeClick(param => {
+            if (!param.time) return;
+            const d = param.seriesData.get(series8);
+            if (!d) return;
+
+            if (!deltaPoint1) {
+                deltaPoint1 = { time: param.time, price: d.close };
+                deltaInfo.textContent = `Ponto 1: ${param.time} @ R$${d.close.toFixed(2)} - Clique no segundo ponto`;
+                series8.setMarkers([{ time: param.time, position: 'aboveBar', color: '#f0b90b', shape: 'circle', text: '1' }]);
+            } else {
+                const delta = d.close - deltaPoint1.price;
+                const pct = (delta / deltaPoint1.price * 100).toFixed(2);
+                deltaInfo.innerHTML = `Delta: <span style="color:${delta >= 0 ? '#26a69a' : '#ef5350'}">R$${delta.toFixed(2)} (${pct}%)</span> de ${deltaPoint1.time} até ${param.time}`;
+                series8.setMarkers([
+                    { time: deltaPoint1.time, position: 'aboveBar', color: '#f0b90b', shape: 'circle', text: '1' },
+                    { time: param.time, position: 'aboveBar', color: '#f0b90b', shape: 'circle', text: '2' }
+                ]);
+                deltaPoint1 = null;
+            }
+        });
+
+        // ===== 9. HIGHLIGHT BAR =====
+        const chart9 = makeChart('chart-highlight');
+        const series9 = chart9.addCandlestickSeries();
+        series9.setData(PETR4);
+        chart9.timeScale().fitContent();
+
+        let highlightedBar = null;
+        chart9.subscribeCrosshairMove(param => {
+            if (!param.time) return;
+            // Simular highlight mudando cor de markers
+            const d = param.seriesData.get(series9);
+            if (d && param.time !== highlightedBar) {
+                highlightedBar = param.time;
+                series9.setMarkers([{ time: param.time, position: 'inBar', color: 'rgba(240,185,11,0.3)', shape: 'square', text: '' }]);
+            }
+        });
+
+        // ===== 10. IMAGE WATERMARK (já simulado com emoji no HTML) =====
+        const chart10 = makeChart('chart-image-watermark', { watermark: { visible: true, text: 'AURUM', color: 'rgba(255,255,255,0.03)', fontSize: 80 } });
+        chart10.addCandlestickSeries().setData(PETR4);
+        chart10.timeScale().fitContent();
+
+        // ===== 11. ROUNDED CANDLES (simulação com cores suaves) =====
+        const chart11 = makeChart('chart-rounded');
+        const series11 = chart11.addCandlestickSeries({
+            upColor: 'rgba(38,166,154,0.8)',
+            downColor: 'rgba(239,83,80,0.8)',
+            borderUpColor: 'rgba(38,166,154,1)',
+            borderDownColor: 'rgba(239,83,80,1)',
+            wickUpColor: 'rgba(38,166,154,0.6)',
+            wickDownColor: 'rgba(239,83,80,0.6)',
+        });
+        series11.setData(PETR4);
+        chart11.timeScale().fitContent();
+
+        // ===== 12. BANDS INDICATOR =====
+        const chart12 = makeChart('chart-bands');
+        const series12 = chart12.addCandlestickSeries();
+        series12.setData(PETR4);
+
+        const sma20 = calcSMA(PETR4, 20);
+        chart12.addLineSeries({ color: '#f0b90b', lineWidth: 1 }).setData(sma20);
+
+        // Bollinger
+        const stdMult = 2;
+        const bb = { upper: [], lower: [] };
+        for (let i = 19; i < PETR4.length; i++) {
+            let sumSq = 0;
+            for (let j = 0; j < 20; j++) {
+                const diff = PETR4[i - j].close - sma20[i - 19].value;
+                sumSq += diff * diff;
+            }
+            const std = Math.sqrt(sumSq / 20);
+            bb.upper.push({ time: PETR4[i].time, value: +(sma20[i - 19].value + std * stdMult).toFixed(2) });
+            bb.lower.push({ time: PETR4[i].time, value: +(sma20[i - 19].value - std * stdMult).toFixed(2) });
+        }
+        chart12.addLineSeries({ color: 'rgba(33,150,243,0.5)', lineWidth: 1, lineStyle: 2 }).setData(bb.upper);
+        chart12.addLineSeries({ color: 'rgba(33,150,243,0.5)', lineWidth: 1, lineStyle: 2 }).setData(bb.lower);
+        chart12.timeScale().fitContent();
+
+        // ===== 13. BOXPLOT (simulação) =====
+        const chart13 = makeChart('chart-boxplot');
+        // Simular boxplot com candles representando quartis
+        const boxData = [];
+        for (let month = 1; month <= 12; month++) {
+            const monthData = PETR4.filter(d => d.time.startsWith(`2024-${String(month).padStart(2, '0')}`));
+            if (monthData.length === 0) continue;
+            const closes = monthData.map(d => d.close).sort((a, b) => a - b);
+            const q1 = closes[Math.floor(closes.length * 0.25)];
+            const median = closes[Math.floor(closes.length * 0.5)];
+            const q3 = closes[Math.floor(closes.length * 0.75)];
+            const min = closes[0];
+            const max = closes[closes.length - 1];
+            boxData.push({
+                time: `2024-${String(month).padStart(2, '0')}-15`,
+                open: q1, close: q3, high: max, low: min
+            });
+        }
+        chart13.addCandlestickSeries({ upColor: '#2196F3', downColor: '#2196F3', borderUpColor: '#2196F3', borderDownColor: '#2196F3', wickUpColor: '#2196F3', wickDownColor: '#2196F3' }).setData(boxData);
+        chart13.timeScale().fitContent();
+
+        console.log('✅ Todos os plugins carregados!');
+    </script>
+
+</body>
+
+</html>

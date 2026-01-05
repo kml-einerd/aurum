@@ -13,7 +13,7 @@ aurum/
 ├── index.html           # Grade principal de ativos
 ├── analysis.html        # Página detalhada de análise
 ├── config/
-│   ├── stocks.json      # Lista de ativos da grade principal
+│   ├── stocks.txt       # Lista de ativos (Ticker, Nome // Comentário)
 │   └── widgets.json     # Ordem e configuração dos widgets na análise
 ├── assets/
 │   ├── js/              # Lógica core, home e analysis
@@ -32,7 +32,12 @@ Execute o script na raiz do projeto:
 Acesse em: [http://localhost:8001](http://localhost:8001)
 
 ### 2. Personalizar a Grade de Ativos
-Edite `config/stocks.json` para adicionar ou remover empresas da página inicial.
+Edite `config/stocks.txt`. Você pode usar o formato `TICKER, Nome` e adicionar comentários com `//` ou `#` para organizar a ordem:
+```text
+PETR4, Petrobras // 1. Principal
+VALE3, Vale      // 2. Mineração
+```
+A ordem das linhas no arquivo define a ordem no site.
 
 ### 3. Personalizar os Widgets (A Central da Aplicação)
 Edite `config/widgets.json`. Você pode:

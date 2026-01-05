@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightweight Charts - Showcase Completo</title>
+    <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            line-height: 1.4;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin: 30px 0 5px;
+            padding: 10px;
+            background: #333;
+            border-left: 4px solid #f0b90b;
+        }
+
+        .info {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background: #222;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-box {
+            background: #0d0d0d;
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        .chart-box h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #f0b90b;
+        }
+
+        .chart-box .desc {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .chart-box .chart {
+            height: 250px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        button.active {
+            background: #f0b90b;
+            color: #000;
+        }
+
+        .marker-legend {
+            display: flex;
+            gap: 20px;
+            font-size: 11px;
+            color: #888;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="nav"
+        style="display:flex; gap:10px; margin-bottom:20px; padding:10px; background:#222; border-radius:4px;">
+        <a href="index.html"
+            style="color:#000; text-decoration:none; padding:8px 16px; background:#f0b90b; border-radius:4px;">📊
+            Funcionalidades Base</a>
+        <a href="plugins.html"
+            style="color:#888; text-decoration:none; padding:8px 16px; background:#333; border-radius:4px;">🔌
+            Plugins</a>
+    </div>
+
+    <h1>📊 TradingView Lightweight Charts - Showcase Completo</h1>
+    <p style="color:#888; margin-bottom:20px;">Demonstração de TODAS as funcionalidades disponíveis na biblioteca. Dados
+        simulados para ações brasileiras.</p>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 1: TIPOS DE SÉRIES -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>1. TIPOS DE SÉRIES (Series Types)</h2>
+        <div class="info">
+            A biblioteca suporta 6 tipos nativos de séries. Cada uma tem opções específicas de customização.
+            <br>Opções globais: lineWidth, color, priceScaleId, title, visible, priceLineVisible, lastValueVisible
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>1.1 CandlestickSeries</h3>
+                <div class="desc">O mais comum para análise técnica. Mostra OHLC (Open, High, Low, Close).<br>
+                    Opções: upColor, downColor, borderUpColor, borderDownColor, wickUpColor, wickDownColor</div>
+                <div id="chart-candle" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>1.2 LineSeries</h3>
+                <div class="desc">Linha simples conectando valores de fechamento.<br>
+                    Opções: color, lineWidth, lineStyle (Solid, Dotted, Dashed, LargeDashed, SparseDotted),
+                    crosshairMarkerVisible</div>
+                <div id="chart-line" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>1.3 AreaSeries</h3>
+                <div class="desc">Área preenchida abaixo da linha, bom para visualizar tendências.<br>
+                    Opções: topColor, bottomColor, lineColor, lineWidth, crosshairMarkerVisible</div>
+                <div id="chart-area" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>1.4 BarSeries</h3>
+                <div class="desc">Barras OHLC tradicionais (estilo ocidental).<br>
+                    Opções: upColor, downColor, openVisible, thinBars</div>
+                <div id="chart-bar" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>1.5 BaselineSeries</h3>
+                <div class="desc">Mostra valores acima/abaixo de uma linha base com cores diferentes.<br>
+                    Opções: baseValue, topLineColor, topFillColor1, topFillColor2, bottomLineColor, bottomFillColor1,
+                    bottomFillColor2</div>
+                <div id="chart-baseline" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>1.6 HistogramSeries</h3>
+                <div class="desc">Barras verticais, ideal para volume ou indicadores osciladores.<br>
+                    Opções: color, base (valor base das barras), priceFormat</div>
+                <div id="chart-histogram" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 2: MÚLTIPLAS SÉRIES -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>2. MÚLTIPLAS SÉRIES NO MESMO GRÁFICO</h2>
+        <div class="info">
+            Você pode adicionar quantas séries quiser. Pode compartilhar escala de preço ou usar escalas separadas.
+            <br>Use priceScaleId para definir escalas: 'right', 'left', ou IDs customizados.
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>2.1 Candlestick + Volume</h3>
+                <div class="desc">Volume em escala separada (priceScaleId: 'volume') com scaleMargins para posicionar
+                    embaixo.</div>
+                <div id="chart-candle-volume" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>2.2 Preço + Médias Móveis</h3>
+                <div class="desc">SMA 20 (amarelo), EMA 50 (rosa), EMA 200 (azul) na mesma escala do preço.</div>
+                <div id="chart-moving-averages" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>2.3 Duas Ações Sobrepostas</h3>
+                <div class="desc">PETR4 (escala direita) vs VALE3 (escala esquerda). Útil para comparação.</div>
+                <div id="chart-overlay" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>2.4 Bandas de Bollinger</h3>
+                <div class="desc">3 linhas: banda superior, média (SMA), banda inferior. Área pode ser preenchida com
+                    AreaSeries.</div>
+                <div id="chart-bollinger" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 3: MARCADORES E ANOTAÇÕES -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>3. MARCADORES (Markers)</h2>
+        <div class="info">
+            Marcadores são pontos visuais em datas específicas. Ideal para sinais de compra/venda, eventos, etc.
+            <br>Opções por marcador: time, position (aboveBar, belowBar, inBar), shape (circle, square, arrowUp,
+            arrowDown), color, text, size
+        </div>
+
+        <div class="marker-legend">
+            <span>🔺 arrowUp = Compra</span>
+            <span>🔻 arrowDown = Venda</span>
+            <span>⬤ circle = Alerta</span>
+            <span>◼ square = Evento</span>
+        </div>
+
+        <div class="chart-container" id="chart-markers"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 4: LINHAS DE PREÇO -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>4. LINHAS DE PREÇO (Price Lines)</h2>
+        <div class="info">
+            Linhas horizontais em preços específicos. Útil para suporte, resistência, stops, alvos.
+            <br>Opções: price, color, lineWidth, lineStyle, axisLabelVisible, title, lineVisible
+        </div>
+
+        <div class="chart-container" id="chart-pricelines"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 5: ESCALAS DE PREÇO -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>5. ESCALAS DE PREÇO (Price Scales)</h2>
+        <div class="info">
+            Configurações da escala vertical. Pode ter escala esquerda, direita ou ambas.
+            <br>Opções: mode (Normal, Logarithmic, Percentage, IndexedTo100), scaleMargins, borderVisible, autoScale,
+            invertScale
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>5.1 Escala Normal</h3>
+                <div class="desc">Escala linear padrão.</div>
+                <div id="chart-scale-normal" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>5.2 Escala Logarítmica</h3>
+                <div class="desc">Melhor para ver variações percentuais iguais. mode: 1 (Logarithmic)</div>
+                <div id="chart-scale-log" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>5.3 Escala Percentual</h3>
+                <div class="desc">Mostra variação % a partir do primeiro ponto. mode: 2 (Percentage)</div>
+                <div id="chart-scale-percent" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>5.4 IndexedTo100</h3>
+                <div class="desc">Normaliza o primeiro valor para 100. mode: 3</div>
+                <div id="chart-scale-indexed" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 6: ESCALA DE TEMPO -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>6. ESCALA DE TEMPO (Time Scale)</h2>
+        <div class="info">
+            Configurações do eixo horizontal (tempo).
+            <br>Opções: rightOffset, barSpacing, minBarSpacing, fixLeftEdge, fixRightEdge, visible, timeVisible,
+            secondsVisible, tickMarkFormatter
+        </div>
+
+        <div class="controls">
+            <button onclick="timeScaleDemo('fit')">fitContent()</button>
+            <button onclick="timeScaleDemo('scroll')">scrollToPosition()</button>
+            <button onclick="timeScaleDemo('range')">setVisibleRange()</button>
+            <button onclick="timeScaleDemo('reset')">resetTimeScale()</button>
+        </div>
+
+        <div class="chart-container" id="chart-timescale"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 7: CROSSHAIR (CURSOR) -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>7. CROSSHAIR (Cursor)</h2>
+        <div class="info">
+            Linhas que seguem o cursor. 3 modos disponíveis.
+            <br>Opções: mode (Normal, Magnet, Hidden), vertLine (color, width, style, visible, labelVisible), horzLine
+            (idem)
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>7.1 Normal</h3>
+                <div class="desc">Segue exatamente o cursor.</div>
+                <div id="chart-crosshair-normal" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>7.2 Magnet</h3>
+                <div class="desc">Gruda no valor mais próximo.</div>
+                <div id="chart-crosshair-magnet" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>7.3 Hidden</h3>
+                <div class="desc">Sem linhas de crosshair.</div>
+                <div id="chart-crosshair-hidden" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 8: WATERMARK -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>8. WATERMARK (Marca d'água)</h2>
+        <div class="info">
+            Texto grande de fundo no gráfico, geralmente usado para mostrar o ticker.
+            <br>Opções: text, color, visible, fontSize, fontFamily, fontStyle, horzAlign (left, center, right),
+            vertAlign (top, center, bottom)
+        </div>
+
+        <div class="chart-container" id="chart-watermark"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 9: LAYOUT E GRID -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>9. LAYOUT E GRID</h2>
+        <div class="info">
+            Opções de aparência do gráfico.
+            <br>Layout: background (type: 'solid' ou 'gradient'), textColor, fontSize, fontFamily
+            <br>Grid: vertLines (color, style, visible), horzLines (idem)
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>9.1 Grid Padrão</h3>
+                <div class="desc">Linhas horizontais e verticais visíveis.</div>
+                <div id="chart-grid-default" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>9.2 Sem Grid</h3>
+                <div class="desc">Grid desabilitado para visual limpo.</div>
+                <div id="chart-grid-none" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>9.3 Grid Customizado</h3>
+                <div class="desc">Apenas linhas horizontais, estilo tracejado.</div>
+                <div id="chart-grid-custom" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>9.4 Background Gradiente</h3>
+                <div class="desc">Fundo com gradiente vertical.</div>
+                <div id="chart-gradient" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 10: CORES PERSONALIZADAS POR BARRA -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>10. CORES POR BARRA/PONTO</h2>
+        <div class="info">
+            Cada ponto de dados pode ter sua própria cor. Basta incluir 'color' no objeto de dados.
+            <br>Para candles: color (corpo), borderColor, wickColor
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>10.1 Histogram Colorido</h3>
+                <div class="desc">Cada barra com cor baseada no valor.</div>
+                <div id="chart-colored-histogram" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>10.2 Linha com Segmentos</h3>
+                <div class="desc">Cores diferentes para cada segmento.</div>
+                <div id="chart-colored-line" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 11: ATUALIZAÇÃO EM TEMPO REAL -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>11. ATUALIZAÇÃO EM TEMPO REAL</h2>
+        <div class="info">
+            Use series.update() para atualizar o último ponto ou adicionar novo.
+            <br>Se o time for igual ao último, atualiza. Se for maior, adiciona novo ponto.
+        </div>
+
+        <div class="controls">
+            <button id="btn-realtime" onclick="toggleRealtime()">▶ Iniciar Simulação</button>
+            <span id="realtime-status" style="color:#888; margin-left:10px;">Parado</span>
+        </div>
+
+        <div class="chart-container" id="chart-realtime"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 12: EVENTOS E INTERAÇÃO -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>12. EVENTOS E INTERAÇÃO</h2>
+        <div class="info">
+            Eventos disponíveis: subscribeCrosshairMove, subscribeClick, subscribeVisibleTimeRangeChange,
+            subscribeVisibleLogicalRangeChange
+            <br>Mova o mouse e clique no gráfico abaixo para ver os eventos.
+        </div>
+
+        <div id="event-log"
+            style="background:#222; padding:10px; font-family:monospace; font-size:11px; height:60px; overflow:auto; margin-bottom:10px;">
+            Eventos aparecerão aqui...
+        </div>
+
+        <div class="chart-container" id="chart-events"></div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 13: FORMATOS DE DADOS -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>13. FORMATOS DE TEMPO</h2>
+        <div class="info">
+            O tempo pode ser: string 'YYYY-MM-DD', timestamp Unix (segundos), ou objeto {year, month, day}.
+            <br>Para intraday, use timestamp Unix com segundos.
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <h3>13.1 String Date</h3>
+                <div class="desc">time: '2024-01-15'</div>
+                <div id="chart-time-string" class="chart"></div>
+            </div>
+
+            <div class="chart-box">
+                <h3>13.2 Unix Timestamp (Intraday)</h3>
+                <div class="desc">time: 1705312800 (segundos). Mostra horas/minutos.</div>
+                <div id="chart-time-unix" class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 14: RESPONSIVIDADE -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>14. RESPONSIVIDADE</h2>
+        <div class="info">
+            Use autoSize: true para redimensionar automaticamente, ou chart.applyOptions({width, height}) manual.
+            <br>ResizeObserver é recomendado para containers dinâmicos.
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEÇÃO 15: EXEMPLO COMPLETO -->
+    <!-- ============================================ -->
+    <div class="section">
+        <h2>15. EXEMPLO COMPLETO - ANÁLISE TÉCNICA</h2>
+        <div class="info">
+            Gráfico combinando: Candlestick + Volume + SMA + EMA + Markers + Price Lines
+        </div>
+
+        <div style="height:500px; background:#0d0d0d; border:1px solid #333;" id="chart-complete"></div>
+    </div>
+
+    <script>
+        // ===== DADOS SIMULADOS =====
+        function generateCandles(basePrice, days, symbol) {
+            const data = [];
+            let price = basePrice;
+            const startDate = new Date('2024-01-01');
+
+            for (let i = 0; i < days; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                if (date.getDay() === 0 || date.getDay() === 6) continue;
+
+                const change = (Math.random() - 0.48) * price * 0.03;
+                const open = price;
+                const close = price + change;
+                const high = Math.max(open, close) * (1 + Math.random() * 0.015);
+                const low = Math.min(open, close) * (1 - Math.random() * 0.015);
+                price = close;
+
+                data.push({
+                    time: date.toISOString().split('T')[0],
+                    open: +open.toFixed(2),
+                    high: +high.toFixed(2),
+                    low: +low.toFixed(2),
+                    close: +close.toFixed(2),
+                    volume: Math.floor(Math.random() * 50000000 + 10000000)
+                });
+            }
+            return data;
+        }
+
+        function toLineData(candles) {
+            return candles.map(c => ({ time: c.time, value: c.close }));
+        }
+
+        function toVolumeData(candles) {
+            return candles.map(c => ({
+                time: c.time,
+                value: c.volume,
+                color: c.close >= c.open ? 'rgba(38,166,154,0.5)' : 'rgba(239,83,80,0.5)'
+            }));
+        }
+
+        function calcSMA(data, period) {
+            const result = [];
+            for (let i = period - 1; i < data.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < period; j++) sum += data[i - j].close || data[i - j].value;
+                result.push({ time: data[i].time, value: +(sum / period).toFixed(2) });
+            }
+            return result;
+        }
+
+        function calcEMA(data, period) {
+            const result = [];
+            const k = 2 / (period + 1);
+            let ema = data[0].close || data[0].value;
+            for (let i = 0; i < data.length; i++) {
+                ema = (data[i].close || data[i].value) * k + ema * (1 - k);
+                if (i >= period - 1) result.push({ time: data[i].time, value: +ema.toFixed(2) });
+            }
+            return result;
+        }
+
+        function calcBollinger(data, period = 20, mult = 2) {
+            const sma = calcSMA(data, period);
+            const upper = [], lower = [];
+            for (let i = period - 1; i < data.length; i++) {
+                let sumSq = 0;
+                for (let j = 0; j < period; j++) {
+                    const diff = (data[i - j].close || data[i - j].value) - sma[i - period + 1].value;
+                    sumSq += diff * diff;
+                }
+                const std = Math.sqrt(sumSq / period);
+                const m = sma[i - period + 1].value;
+                upper.push({ time: data[i].time, value: +(m + std * mult).toFixed(2) });
+                lower.push({ time: data[i].time, value: +(m - std * mult).toFixed(2) });
+            }
+            return { sma, upper, lower };
+        }
+
+        // Dados base
+        const PETR4 = generateCandles(38, 250, 'PETR4');
+        const VALE3 = generateCandles(68, 250, 'VALE3');
+
+        // Helper para criar gráficos
+        function makeChart(containerId, options = {}) {
+            const container = document.getElementById(containerId);
+            if (!container) return null;
+            return LightweightCharts.createChart(container, {
+                width: container.clientWidth,
+                height: container.clientHeight || 250,
+                layout: { background: { type: 'solid', color: '#0d0d0d' }, textColor: '#999' },
+                grid: { vertLines: { color: '#1a1a1a' }, horzLines: { color: '#1a1a1a' } },
+                rightPriceScale: { borderColor: '#333' },
+                timeScale: { borderColor: '#333' },
+                ...options
+            });
+        }
+
+        // ===== SEÇÃO 1: TIPOS DE SÉRIES =====
+        // 1.1 Candlestick
+        const chart1 = makeChart('chart-candle');
+        chart1.addCandlestickSeries({ upColor: '#26a69a', downColor: '#ef5350', borderUpColor: '#26a69a', borderDownColor: '#ef5350', wickUpColor: '#26a69a', wickDownColor: '#ef5350' }).setData(PETR4);
+        chart1.timeScale().fitContent();
+
+        // 1.2 Line
+        const chart2 = makeChart('chart-line');
+        chart2.addLineSeries({ color: '#2196F3', lineWidth: 2 }).setData(toLineData(PETR4));
+        chart2.timeScale().fitContent();
+
+        // 1.3 Area
+        const chart3 = makeChart('chart-area');
+        chart3.addAreaSeries({ lineColor: '#2962FF', topColor: 'rgba(41,98,255,0.3)', bottomColor: 'rgba(41,98,255,0)' }).setData(toLineData(PETR4));
+        chart3.timeScale().fitContent();
+
+        // 1.4 Bar
+        const chart4 = makeChart('chart-bar');
+        chart4.addBarSeries({ upColor: '#26a69a', downColor: '#ef5350' }).setData(PETR4);
+        chart4.timeScale().fitContent();
+
+        // 1.5 Baseline
+        const chart5 = makeChart('chart-baseline');
+        const baseValue = PETR4[Math.floor(PETR4.length / 2)].close;
+        chart5.addBaselineSeries({ baseValue: { type: 'price', price: baseValue }, topLineColor: '#26a69a', topFillColor1: 'rgba(38,166,154,0.3)', topFillColor2: 'rgba(38,166,154,0)', bottomLineColor: '#ef5350', bottomFillColor1: 'rgba(239,83,80,0)', bottomFillColor2: 'rgba(239,83,80,0.3)' }).setData(toLineData(PETR4));
+        chart5.timeScale().fitContent();
+
+        // 1.6 Histogram
+        const chart6 = makeChart('chart-histogram');
+        chart6.addHistogramSeries({ color: '#f0b90b' }).setData(toLineData(PETR4).map((d, i) => ({ ...d, value: d.value - 35, color: d.value > 38 ? '#26a69a' : '#ef5350' })));
+        chart6.timeScale().fitContent();
+
+        // ===== SEÇÃO 2: MÚLTIPLAS SÉRIES =====
+        // 2.1 Candle + Volume
+        const chart7 = makeChart('chart-candle-volume');
+        chart7.addCandlestickSeries().setData(PETR4);
+        const volSeries = chart7.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'vol' });
+        volSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
+        volSeries.setData(toVolumeData(PETR4));
+        chart7.timeScale().fitContent();
+
+        // 2.2 Moving Averages
+        const chart8 = makeChart('chart-moving-averages');
+        chart8.addCandlestickSeries().setData(PETR4);
+        chart8.addLineSeries({ color: '#f0b90b', lineWidth: 1 }).setData(calcSMA(PETR4, 20));
+        chart8.addLineSeries({ color: '#e91e63', lineWidth: 1 }).setData(calcEMA(PETR4, 50));
+        chart8.addLineSeries({ color: '#2196F3', lineWidth: 1 }).setData(calcEMA(PETR4, 100));
+        chart8.timeScale().fitContent();
+
+        // 2.3 Overlay duas ações
+        const chart9 = makeChart('chart-overlay');
+        chart9.addLineSeries({ color: '#26a69a', priceScaleId: 'right' }).setData(toLineData(PETR4));
+        chart9.addLineSeries({ color: '#ef5350', priceScaleId: 'left' }).setData(toLineData(VALE3));
+        chart9.priceScale('left').applyOptions({ visible: true });
+        chart9.timeScale().fitContent();
+
+        // 2.4 Bollinger
+        const chart10 = makeChart('chart-bollinger');
+        const bb = calcBollinger(PETR4);
+        chart10.addLineSeries({ color: '#666', lineWidth: 1 }).setData(bb.sma);
+        chart10.addLineSeries({ color: '#2196F3', lineWidth: 1, lineStyle: 2 }).setData(bb.upper);
+        chart10.addLineSeries({ color: '#2196F3', lineWidth: 1, lineStyle: 2 }).setData(bb.lower);
+        chart10.addCandlestickSeries().setData(PETR4);
+        chart10.timeScale().fitContent();
+
+        // ===== SEÇÃO 3: MARKERS =====
+        const chart11 = makeChart('chart-markers');
+        const series11 = chart11.addCandlestickSeries();
+        series11.setData(PETR4);
+        const len = PETR4.length;
+        series11.setMarkers([
+            { time: PETR4[len - 100].time, position: 'belowBar', color: '#26a69a', shape: 'arrowUp', text: 'Compra', size: 2 },
+            { time: PETR4[len - 80].time, position: 'aboveBar', color: '#ef5350', shape: 'arrowDown', text: 'Venda', size: 2 },
+            { time: PETR4[len - 60].time, position: 'belowBar', color: '#f0b90b', shape: 'circle', text: 'Alerta' },
+            { time: PETR4[len - 40].time, position: 'inBar', color: '#9c27b0', shape: 'square', text: 'Evento' },
+            { time: PETR4[len - 20].time, position: 'belowBar', color: '#26a69a', shape: 'arrowUp', text: 'Compra', size: 2 },
+        ]);
+        chart11.timeScale().fitContent();
+
+        // ===== SEÇÃO 4: PRICE LINES =====
+        const chart12 = makeChart('chart-pricelines');
+        const series12 = chart12.addCandlestickSeries();
+        series12.setData(PETR4);
+        const lastPrice = PETR4[PETR4.length - 1].close;
+        series12.createPriceLine({ price: lastPrice * 1.05, color: '#26a69a', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'Resistência' });
+        series12.createPriceLine({ price: lastPrice * 0.95, color: '#ef5350', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'Suporte' });
+        series12.createPriceLine({ price: lastPrice, color: '#f0b90b', lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: 'Preço Atual' });
+        chart12.timeScale().fitContent();
+
+        // ===== SEÇÃO 5: ESCALAS =====
+        // Normal
+        const chart13 = makeChart('chart-scale-normal');
+        chart13.addLineSeries({ color: '#2196F3' }).setData(toLineData(PETR4));
+        chart13.timeScale().fitContent();
+
+        // Log
+        const chart14 = makeChart('chart-scale-log');
+        chart14.priceScale('right').applyOptions({ mode: 1 });
+        chart14.addLineSeries({ color: '#e91e63' }).setData(toLineData(PETR4));
+        chart14.timeScale().fitContent();
+
+        // Percent
+        const chart15 = makeChart('chart-scale-percent');
+        chart15.priceScale('right').applyOptions({ mode: 2 });
+        chart15.addLineSeries({ color: '#26a69a' }).setData(toLineData(PETR4));
+        chart15.timeScale().fitContent();
+
+        // IndexedTo100
+        const chart16 = makeChart('chart-scale-indexed');
+        chart16.priceScale('right').applyOptions({ mode: 3 });
+        chart16.addLineSeries({ color: '#f0b90b' }).setData(toLineData(PETR4));
+        chart16.timeScale().fitContent();
+
+        // ===== SEÇÃO 6: TIME SCALE =====
+        const chart17 = makeChart('chart-timescale');
+        chart17.addCandlestickSeries().setData(PETR4);
+        chart17.timeScale().fitContent();
+
+        window.timeScaleDemo = function (action) {
+            const ts = chart17.timeScale();
+            if (action === 'fit') ts.fitContent();
+            if (action === 'scroll') ts.scrollToPosition(-50, false);
+            if (action === 'range') ts.setVisibleRange({ from: PETR4[PETR4.length - 60].time, to: PETR4[PETR4.length - 1].time });
+            if (action === 'reset') ts.resetTimeScale();
+        };
+
+        // ===== SEÇÃO 7: CROSSHAIR =====
+        // Normal
+        const chart18 = makeChart('chart-crosshair-normal', { crosshair: { mode: 0 } });
+        chart18.addLineSeries({ color: '#2196F3' }).setData(toLineData(PETR4));
+        chart18.timeScale().fitContent();
+
+        // Magnet
+        const chart19 = makeChart('chart-crosshair-magnet', { crosshair: { mode: 1 } });
+        chart19.addCandlestickSeries().setData(PETR4);
+        chart19.timeScale().fitContent();
+
+        // Hidden
+        const chart20 = makeChart('chart-crosshair-hidden', { crosshair: { mode: 2 } });
+        chart20.addLineSeries({ color: '#26a69a' }).setData(toLineData(PETR4));
+        chart20.timeScale().fitContent();
+
+        // ===== SEÇÃO 8: WATERMARK =====
+        const chart21 = makeChart('chart-watermark', { watermark: { visible: true, text: 'PETR4', color: 'rgba(255,255,255,0.1)', fontSize: 72, horzAlign: 'center', vertAlign: 'center' } });
+        chart21.addCandlestickSeries().setData(PETR4);
+        chart21.timeScale().fitContent();
+
+        // ===== SEÇÃO 9: LAYOUT E GRID =====
+        // Default
+        const chart22 = makeChart('chart-grid-default');
+        chart22.addLineSeries({ color: '#2196F3' }).setData(toLineData(PETR4));
+        chart22.timeScale().fitContent();
+
+        // No Grid
+        const chart23 = makeChart('chart-grid-none', { grid: { vertLines: { visible: false }, horzLines: { visible: false } } });
+        chart23.addLineSeries({ color: '#e91e63' }).setData(toLineData(PETR4));
+        chart23.timeScale().fitContent();
+
+        // Custom Grid
+        const chart24 = makeChart('chart-grid-custom', { grid: { vertLines: { visible: false }, horzLines: { color: '#333', style: 2 } } });
+        chart24.addLineSeries({ color: '#26a69a' }).setData(toLineData(PETR4));
+        chart24.timeScale().fitContent();
+
+        // Gradient Background
+        const chart25 = makeChart('chart-gradient', { layout: { background: { type: 'gradient', topColor: '#1a1a3a', bottomColor: '#0d0d0d' }, textColor: '#999' } });
+        chart25.addAreaSeries({ lineColor: '#f0b90b', topColor: 'rgba(240,185,11,0.3)', bottomColor: 'rgba(240,185,11,0)' }).setData(toLineData(PETR4));
+        chart25.timeScale().fitContent();
+
+        // ===== SEÇÃO 10: CORES POR BARRA =====
+        // Histogram colorido
+        const chart26 = makeChart('chart-colored-histogram');
+        const histData = toLineData(PETR4).map((d, i) => {
+            const val = d.value - 35;
+            const hue = Math.floor((val / 10) * 120);
+            return { ...d, value: val, color: `hsl(${hue}, 70%, 50%)` };
+        });
+        chart26.addHistogramSeries().setData(histData);
+        chart26.timeScale().fitContent();
+
+        // Linha colorida
+        const chart27 = makeChart('chart-colored-line');
+        const lineColorData = toLineData(PETR4).map((d, i) => ({ ...d, color: i % 50 < 25 ? '#26a69a' : '#ef5350' }));
+        chart27.addLineSeries({ lineWidth: 2 }).setData(lineColorData);
+        chart27.timeScale().fitContent();
+
+        // ===== SEÇÃO 11: REALTIME =====
+        const chart28 = makeChart('chart-realtime');
+        const rtSeries = chart28.addCandlestickSeries();
+        let rtData = [...PETR4];
+        rtSeries.setData(rtData);
+        chart28.timeScale().fitContent();
+
+        let rtInterval = null;
+        window.toggleRealtime = function () {
+            const btn = document.getElementById('btn-realtime');
+            const status = document.getElementById('realtime-status');
+            if (rtInterval) {
+                clearInterval(rtInterval);
+                rtInterval = null;
+                btn.textContent = '▶ Iniciar Simulação';
+                status.textContent = 'Parado';
+            } else {
+                btn.textContent = '⏹ Parar Simulação';
+                status.textContent = 'Executando...';
+                rtInterval = setInterval(() => {
+                    const last = rtData[rtData.length - 1];
+                    const lastDate = new Date(last.time);
+                    lastDate.setDate(lastDate.getDate() + 1);
+                    while (lastDate.getDay() === 0 || lastDate.getDay() === 6) lastDate.setDate(lastDate.getDate() + 1);
+
+                    const change = (Math.random() - 0.48) * last.close * 0.02;
+                    const open = last.close;
+                    const close = open + change;
+                    const newCandle = {
+                        time: lastDate.toISOString().split('T')[0],
+                        open: +open.toFixed(2),
+                        high: +Math.max(open, close, open * 1.01).toFixed(2),
+                        low: +Math.min(open, close, open * 0.99).toFixed(2),
+                        close: +close.toFixed(2)
+                    };
+                    rtData.push(newCandle);
+                    rtSeries.update(newCandle);
+                }, 500);
+            }
+        };
+
+        // ===== SEÇÃO 12: EVENTOS =====
+        const chart29 = makeChart('chart-events');
+        const series29 = chart29.addCandlestickSeries();
+        series29.setData(PETR4);
+        chart29.timeScale().fitContent();
+
+        const eventLog = document.getElementById('event-log');
+        chart29.subscribeCrosshairMove(param => {
+            if (param.time) {
+                const price = param.seriesData.get(series29);
+                eventLog.innerHTML = `<div>crosshairMove: time=${param.time}, price=${price?.close || 'N/A'}</div>` + eventLog.innerHTML;
+            }
+        });
+        chart29.subscribeClick(param => {
+            eventLog.innerHTML = `<div style="color:#f0b90b">click: time=${param.time}, x=${param.point?.x?.toFixed(0)}, y=${param.point?.y?.toFixed(0)}</div>` + eventLog.innerHTML;
+        });
+
+        // ===== SEÇÃO 13: FORMATOS DE TEMPO =====
+        // String
+        const chart30 = makeChart('chart-time-string');
+        chart30.addLineSeries({ color: '#2196F3' }).setData(toLineData(PETR4));
+        chart30.timeScale().fitContent();
+
+        // Unix (intraday)
+        const chart31 = makeChart('chart-time-unix', { timeScale: { timeVisible: true, secondsVisible: false } });
+        const now = Math.floor(Date.now() / 1000);
+        const intradayData = [];
+        for (let i = 0; i < 390; i++) { // 6.5h de pregão
+            intradayData.push({ time: now - (390 - i) * 60, value: 38 + Math.sin(i / 30) * 2 + Math.random() });
+        }
+        chart31.addLineSeries({ color: '#26a69a' }).setData(intradayData);
+        chart31.timeScale().fitContent();
+
+        // ===== SEÇÃO 15: EXEMPLO COMPLETO =====
+        const chartComplete = LightweightCharts.createChart(document.getElementById('chart-complete'), {
+            width: document.getElementById('chart-complete').clientWidth,
+            height: 500,
+            layout: { background: { type: 'solid', color: '#0d0d0d' }, textColor: '#999' },
+            grid: { vertLines: { color: '#1a1a1a' }, horzLines: { color: '#1a1a1a' } },
+            watermark: { visible: true, text: 'PETR4', color: 'rgba(255,255,255,0.05)', fontSize: 100 },
+            crosshair: { mode: 1 }
+        });
+
+        // Volume
+        const volComplete = chartComplete.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'vol' });
+        volComplete.priceScale().applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
+        volComplete.setData(toVolumeData(PETR4));
+
+        // Candles
+        const candleComplete = chartComplete.addCandlestickSeries();
+        candleComplete.setData(PETR4);
+
+        // SMAs
+        chartComplete.addLineSeries({ color: '#f0b90b', lineWidth: 1, title: 'SMA 20' }).setData(calcSMA(PETR4, 20));
+        chartComplete.addLineSeries({ color: '#e91e63', lineWidth: 1, title: 'EMA 50' }).setData(calcEMA(PETR4, 50));
+
+        // Markers
+        candleComplete.setMarkers([
+            { time: PETR4[len - 120].time, position: 'belowBar', color: '#26a69a', shape: 'arrowUp', text: 'Compra' },
+            { time: PETR4[len - 80].time, position: 'aboveBar', color: '#ef5350', shape: 'arrowDown', text: 'Venda' },
+            { time: PETR4[len - 30].time, position: 'belowBar', color: '#26a69a', shape: 'arrowUp', text: 'Compra' },
+        ]);
+
+        // Price Lines
+        const lp = PETR4[PETR4.length - 1].close;
+        candleComplete.createPriceLine({ price: lp * 1.08, color: '#26a69a', lineWidth: 1, lineStyle: 2, title: 'Alvo' });
+        candleComplete.createPriceLine({ price: lp * 0.93, color: '#ef5350', lineWidth: 1, lineStyle: 2, title: 'Stop' });
+
+        chartComplete.timeScale().fitContent();
+
+        // ===== RESIZE =====
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.chart, .chart-container, #chart-complete').forEach(el => {
+                const chart = el._chart;
+                if (chart) chart.applyOptions({ width: el.clientWidth });
+            });
+        });
+
+        console.log('✅ Todos os gráficos carregados!');
+    </script>
+
+</body>
+
+</html>

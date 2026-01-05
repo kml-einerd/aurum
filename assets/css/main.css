@@ -75,95 +75,19 @@ body {
     margin-bottom: 60px;
 }
 
-.stock-card {
+.stock-card-widget {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
+    height: 220px;
+    transition: all 0.3s ease;
 }
 
-.stock-card:hover {
-    transform: translateY(-5px);
+.stock-card-widget:hover {
     border-color: var(--accent-primary);
     box-shadow: var(--glow-shadow);
-}
-
-.stock-card-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.stock-ticker {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.stock-name {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-.stock-price {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 8px 0;
-}
-
-.stock-change {
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: inline-block;
-    width: fit-content;
-    margin-bottom: 16px;
-}
-
-.stock-change.positive {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--accent-green);
-}
-
-.stock-change.negative {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--accent-red);
-}
-
-.stock-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border-color);
-    margin-top: auto;
-}
-
-.meta-label {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.meta-value {
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.stock-sector {
-    margin-top: 12px;
-    font-size: 0.75rem;
-    color: var(--accent-primary);
-    background: rgba(59, 130, 246, 0.1);
-    padding: 2px 8px;
-    border-radius: 100px;
-    width: fit-content;
+    transform: translateY(-2px);
 }
 
 /* Analysis Page Specific */
@@ -257,8 +181,13 @@ body {
 }
 
 @keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 /* Mobile Responsive */
@@ -266,16 +195,20 @@ body {
     .widgets-container {
         grid-template-columns: 1fr;
     }
+
     .widget-wrapper.full-width {
         grid-column: span 1;
     }
+
     .header-content {
         flex-direction: column;
         gap: 16px;
     }
+
     .search-box {
         width: 100%;
     }
+
     .search-box input {
         flex: 1;
     }
